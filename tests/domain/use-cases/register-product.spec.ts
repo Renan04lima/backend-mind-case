@@ -50,4 +50,20 @@ describe('RegisterProduct UseCase', () => {
     })
     expect(productRepoSpy.create).toHaveBeenCalledTimes(1)
   })
+
+  it('should rethrow if CreateProductRepository throws', async () => {
+    const productRepoSpy = mock<CreateProductRepository>()
+    productRepoSpy.create.mockRejectedValueOnce(new Error('repo_error'))
+    const sut = setupRegisterProduct(productRepoSpy)
+
+    const promise = sut({
+      name: 'valid_name',
+      description: 'valid_description',
+      price: 10,
+      quantity_stock: 10,
+      image: Buffer.from('any_image'),
+    })
+
+    await expect(promise).rejects.toThrow(new Error('repo_error'))
+  })
 })
