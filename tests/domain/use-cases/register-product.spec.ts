@@ -1,38 +1,21 @@
-import { mock } from 'jest-mock-extended'
-
-type Input = {
-  name: string
-  description: string
-  image?: Buffer
-  price: number
-  quantity_stock: number
-}
-
-type ProductData = {
-  name: string
-  description: string
-  image?: Buffer
-  price: number
-  quantity_stock: number
-}
-
-interface CreateProductRepository {
-  create: (product: ProductData) => Promise<void>
-}
-
-type Setup = (productRepo: CreateProductRepository) => RegisterProduct
-type RegisterProduct = (input: Input) => Promise<void>
-
-const setupRegisterProduct: Setup = (productRepo) => async (input) => {
-  await productRepo.create(input)
-}
+import { MockProxy, mock } from 'jest-mock-extended'
+import { setupRegisterProduct } from '@/domain/use-cases/register-product'
+import { CreateProductRepository } from '@/domain/contracts/repos/product-repo'
 
 describe('RegisterProduct UseCase', () => {
-  it('should call CreateProductRepository with correct params', async () => {
-    const productRepoSpy = mock<CreateProductRepository>()
-    productRepoSpy.create.mockResolvedValueOnce()
-    const sut = setupRegisterProduct(productRepoSpy)
+  let productRepoSpy: MockProxy<CreateProductRepository>
+  let sut: jest.Func
 
+  beforeAll(() => {
+    productRepoSpy = mock()
+    productRepoSpy.create.mockResolvedValue()
+  })
+
+  beforeEach(() => {
+    sut = setupRegisterProduct(productRepoSpy)
+  })
+
+  it('should call CreateProductRepository with correct params', async () => {
     await sut({
       name: 'valid_name',
       description: 'valid_description',
@@ -52,9 +35,7 @@ describe('RegisterProduct UseCase', () => {
   })
 
   it('should rethrow if CreateProductRepository throws', async () => {
-    const productRepoSpy = mock<CreateProductRepository>()
     productRepoSpy.create.mockRejectedValueOnce(new Error('repo_error'))
-    const sut = setupRegisterProduct(productRepoSpy)
 
     const promise = sut({
       name: 'valid_name',
