@@ -9,7 +9,7 @@ describe('RegisterProduct UseCase', () => {
     name: 'valid_name',
     description: 'valid_description',
     price: 10,
-    quantity_stock: 10,
+    quantityStock: 10,
     image: Buffer.from('any_image'),
   }
 
@@ -20,7 +20,7 @@ describe('RegisterProduct UseCase', () => {
       name: 'valid_name',
       description: 'valid_description',
       price: 10,
-      quantity_stock: 10,
+      quantityStock: 10,
       image: Buffer.from('any_image'),
     })
   })
@@ -36,7 +36,7 @@ describe('RegisterProduct UseCase', () => {
       name: 'valid_name',
       description: 'valid_description',
       price: 10,
-      quantity_stock: 10,
+      quantityStock: 10,
       image: Buffer.from('any_image'),
     })
     expect(productRepoSpy.create).toHaveBeenCalledTimes(1)
@@ -58,7 +58,7 @@ describe('RegisterProduct UseCase', () => {
       name: 'valid_name',
       description: 'valid_description',
       price: 10,
-      quantity_stock: 10,
+      quantityStock: 10,
       image: Buffer.from('any_image'),
     })
   })

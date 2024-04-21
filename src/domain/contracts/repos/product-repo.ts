@@ -1,18 +1,23 @@
-type ProductData = {
-  name: string
-  description: string
-  image?: Buffer
-  price: number
-  quantity_stock: number
-}
-type Product = {
-  id: number
-  name: string
-  description: string
-  image?: Buffer
-  price: number
-  quantity_stock: number
-}
 export interface CreateProductRepository {
-  create: (product: ProductData) => Promise<Product>
+  create: (
+    input: CreateProductRepository.Input
+  ) => Promise<CreateProductRepository.Output>
+}
+
+export namespace CreateProductRepository {
+  export type Input = {
+    name: string
+    description: string
+    image: Buffer | null
+    price: number
+    quantityStock: number
+  }
+  export type Output = {
+    id: number
+    name: string
+    description: string
+    image: Buffer | null
+    price: number
+    quantityStock: number
+  }
 }

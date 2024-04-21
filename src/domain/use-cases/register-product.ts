@@ -3,18 +3,18 @@ import { CreateProductRepository } from '@/domain/contracts/repos/product-repo'
 type Input = {
   name: string
   description: string
-  image?: Buffer
+  image: Buffer | null
   price: number
-  quantity_stock: number
+  quantityStock: number
 }
 
 type Output = {
   id: number
   name: string
   description: string
-  image?: Buffer
+  image: Buffer | null
   price: number
-  quantity_stock: number
+  quantityStock: number
 }
 
 type Setup = (productRepo: CreateProductRepository) => RegisterProduct
