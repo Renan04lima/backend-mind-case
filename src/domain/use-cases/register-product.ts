@@ -18,7 +18,7 @@ type Output = {
 }
 
 type Setup = (productRepo: CreateProductRepository) => RegisterProduct
-type RegisterProduct = (input: Input) => Promise<Output>
+export type RegisterProduct = (input: Input) => Promise<Output>
 
 export const setupRegisterProduct: Setup = (productRepo) => async (input) => {
   return await productRepo.create(input)
