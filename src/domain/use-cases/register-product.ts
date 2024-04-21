@@ -8,9 +8,18 @@ type Input = {
   quantity_stock: number
 }
 
+type Output = {
+  id: number
+  name: string
+  description: string
+  image?: Buffer
+  price: number
+  quantity_stock: number
+}
+
 type Setup = (productRepo: CreateProductRepository) => RegisterProduct
-type RegisterProduct = (input: Input) => Promise<void>
+type RegisterProduct = (input: Input) => Promise<Output>
 
 export const setupRegisterProduct: Setup = (productRepo) => async (input) => {
-  await productRepo.create(input)
+  return await productRepo.create(input)
 }

@@ -5,10 +5,24 @@ import { CreateProductRepository } from '@/domain/contracts/repos/product-repo'
 describe('RegisterProduct UseCase', () => {
   let productRepoSpy: MockProxy<CreateProductRepository>
   let sut: jest.Func
+  const productInput = {
+    name: 'valid_name',
+    description: 'valid_description',
+    price: 10,
+    quantity_stock: 10,
+    image: Buffer.from('any_image'),
+  }
 
   beforeAll(() => {
     productRepoSpy = mock()
-    productRepoSpy.create.mockResolvedValue()
+    productRepoSpy.create.mockResolvedValue({
+      id: 1,
+      name: 'valid_name',
+      description: 'valid_description',
+      price: 10,
+      quantity_stock: 10,
+      image: Buffer.from('any_image'),
+    })
   })
 
   beforeEach(() => {
@@ -16,13 +30,7 @@ describe('RegisterProduct UseCase', () => {
   })
 
   it('should call CreateProductRepository with correct params', async () => {
-    await sut({
-      name: 'valid_name',
-      description: 'valid_description',
-      price: 10,
-      quantity_stock: 10,
-      image: Buffer.from('any_image'),
-    })
+    await sut(productInput)
 
     expect(productRepoSpy.create).toHaveBeenCalledWith({
       name: 'valid_name',
@@ -37,14 +45,21 @@ describe('RegisterProduct UseCase', () => {
   it('should rethrow if CreateProductRepository throws', async () => {
     productRepoSpy.create.mockRejectedValueOnce(new Error('repo_error'))
 
-    const promise = sut({
+    const promise = sut(productInput)
+
+    await expect(promise).rejects.toThrow(new Error('repo_error'))
+  })
+
+  it('should return product on success', async () => {
+    const product = await sut(productInput)
+
+    expect(product).toEqual({
+      id: 1,
       name: 'valid_name',
       description: 'valid_description',
       price: 10,
       quantity_stock: 10,
       image: Buffer.from('any_image'),
     })
-
-    await expect(promise).rejects.toThrow(new Error('repo_error'))
   })
 })
