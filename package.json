@@ -17,7 +17,8 @@
   "dependencies": {
     "@prisma/client": "^5.12.1",
     "module-alias": "^2.2.3",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
