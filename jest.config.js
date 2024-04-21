@@ -15,5 +15,6 @@ module.exports = {
   transform: {
     '\\.ts$': 'ts-jest',
   },
+  setupFilesAfterEnv: ['<rootDir>/tests/infra/mysql/singleton.ts'],
   clearMocks: true,
 }
