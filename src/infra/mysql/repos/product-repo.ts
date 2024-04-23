@@ -2,6 +2,7 @@ import {
   CreateProductRepository,
   DeleteProductsRepository,
   ListProductsRepository,
+  UpdateProductsRepository,
 } from '@/domain/contracts/repos/product-repo'
 import prisma from '@/infra/mysql/prisma-client'
 
@@ -9,7 +10,8 @@ export class MySqlProductRepository
   implements
     CreateProductRepository,
     ListProductsRepository,
-    DeleteProductsRepository
+    DeleteProductsRepository,
+    UpdateProductsRepository
 {
   async create(
     input: CreateProductRepository.Input
@@ -64,5 +66,45 @@ export class MySqlProductRepository
         id,
       },
     })
+  }
+
+  async update({
+    id,
+    ...input
+  }: UpdateProductsRepository.Input): Promise<UpdateProductsRepository.Output> {
+    const exists = await prisma.products.findFirst({
+      where: {
+        id,
+      },
+    })
+    if (!exists) return undefined
+    const productUpdated = await prisma.products.update({
+      where: {
+        id,
+      },
+      data: {
+        name: input.name || exists.name,
+        description: input.description || exists.description,
+        price: input.price || exists.price,
+        quantityStock: input.quantityStock || exists.quantityStock,
+        imageBuffer: input?.image?.buffer || exists.imageBuffer,
+        imageType: input?.image?.mimetype || exists.imageType,
+      },
+    })
+
+    return {
+      id: productUpdated.id,
+      name: productUpdated.name,
+      description: productUpdated.description,
+      price: productUpdated.price,
+      quantityStock: productUpdated.quantityStock,
+      image:
+        productUpdated.imageBuffer && productUpdated.imageType
+          ? {
+              buffer: productUpdated.imageBuffer,
+              mimetype: productUpdated.imageType,
+            }
+          : undefined,
+    }
   }
 }

@@ -2,6 +2,7 @@ import {
   CreateProductRepository,
   DeleteProductsRepository,
   ListProductsRepository,
+  UpdateProductsRepository,
 } from '@/domain/contracts/repos/product-repo'
 import { MySqlProductRepository } from '@/infra/mysql/repos/product-repo'
 import { prismaMock } from './singleton'
@@ -109,6 +110,69 @@ describe('MySqlProductRepository', () => {
       const product = await sut.delete({ id: 1 })
 
       expect(product).toBeUndefined()
+    })
+  })
+
+  describe('update', () => {
+    let sut: UpdateProductsRepository
+
+    beforeEach(() => {
+      sut = new MySqlProductRepository()
+      prismaMock.products.update.mockResolvedValue({
+        id: 1,
+        name: 'name_updated',
+        description: 'description_updated',
+        price: 30,
+        quantityStock: 20,
+        imageBuffer: Buffer.from('any_image'),
+        imageType: 'image/png',
+      })
+    })
+
+    it('should return undefined if product not exists', async () => {
+      prismaMock.products.findFirst.mockResolvedValueOnce(null)
+
+      const notExistID = 999
+      const product = await sut.update({
+        id: notExistID,
+        name: 'name_updated',
+        description: 'description_updated',
+        price: 30,
+        quantityStock: 20,
+        image: { buffer: Buffer.from('any_image'), mimetype: 'image/png' },
+      })
+
+      expect(product).toBeUndefined()
+    })
+
+
+    it('should update product', async () => {
+      prismaMock.products.findFirst.mockResolvedValue({
+        id: 1,
+        name: 'name_old',
+        description: 'description_old',
+        price: 10,
+        quantityStock: 25,
+        imageBuffer: Buffer.from('any_image'),
+        imageType: 'image/png',
+      })
+      const product = await sut.update({
+        id: 1,
+        name: 'name_updated',
+        description: 'description_updated',
+        price: 30,
+        quantityStock: 20,
+        image: { buffer: Buffer.from('any_image'), mimetype: 'image/png' },
+      })
+
+      expect(product).toEqual({
+        id: 1,
+        name: 'name_updated',
+        description: 'description_updated',
+        price: 30,
+        quantityStock: 20,
+        image: { buffer: Buffer.from('any_image'), mimetype: 'image/png' },
+      })
     })
   })
 })

@@ -58,3 +58,37 @@ export namespace DeleteProductsRepository {
     id: number
   }
 }
+
+export interface UpdateProductsRepository {
+  update: (
+    input: UpdateProductsRepository.Input
+  ) => Promise<UpdateProductsRepository.Output>
+}
+
+export namespace UpdateProductsRepository {
+  export type Input = {
+    id: number
+    name?: string
+    description?: string
+    image?: {
+      buffer: Buffer
+      mimetype: string
+    }
+    price?: number
+    quantityStock?: number
+  }
+
+  export type Output =
+    | {
+        id: number
+        name: string
+        description: string
+        price: number
+        quantityStock: number
+        image?: {
+          buffer: Buffer
+          mimetype: string
+        }
+      }
+    | undefined
+}
