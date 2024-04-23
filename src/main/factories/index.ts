@@ -3,21 +3,32 @@ import { RegisterProductController } from '@/application/controllers/register-pr
 import { DeleteProductController } from '@/application/controllers/delete-product'
 import { setupRegisterProduct } from '@/domain/use-cases/register-product'
 import { MySqlProductRepository } from '@/infra/mysql/repos/product-repo'
+import { UpdateProductController } from '@/application/controllers/update-product'
+
+const makeMySqlProductRepository = () => {
+  return new MySqlProductRepository()
+}
 
 export const makeRegisterProductController = () => {
   return new RegisterProductController(
-    setupRegisterProduct(new MySqlProductRepository())
+    setupRegisterProduct(makeMySqlProductRepository())
   )
 }
 
 export const makeListProductsController = () => {
-  return new ListProductsController(
-    new MySqlProductRepository().list.bind(new MySqlProductRepository())
-  )
+  const productRepo = makeMySqlProductRepository()
+
+  return new ListProductsController(productRepo.list.bind(productRepo))
 }
 
 export const makeDeleteProductController = () => {
-  return new DeleteProductController(
-    new MySqlProductRepository().delete.bind(new MySqlProductRepository())
-  )
+  const productRepo = makeMySqlProductRepository()
+
+  return new DeleteProductController(productRepo.delete.bind(productRepo))
+}
+
+export const makeUpdateProductController = () => {
+  const productRepo = makeMySqlProductRepository()
+
+  return new UpdateProductController(productRepo.update.bind(productRepo))
 }
