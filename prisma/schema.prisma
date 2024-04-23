@@ -25,7 +25,8 @@ model Products {
   id                Int                 @id @default(autoincrement())
   name              String              @db.VarChar(128)
   description       String
-  image             Bytes?
+  imageBuffer       Bytes?
+  imageType         String?             @db.VarChar(10)
   price             Int
   quantityStock     Int                 @map("quantity_stock")
   StockTransactions StockTransactions[]

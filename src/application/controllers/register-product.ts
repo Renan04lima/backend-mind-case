@@ -18,7 +18,10 @@ type Model =
       description: string
       price: number
       quantityStock: number
-      image: Buffer | null
+      image?: {
+        buffer: Buffer
+        mimetype: string
+      }
     }
   | Error
 
@@ -31,11 +34,12 @@ export class RegisterProductController extends Controller {
     const product = await this.register({
       name: req.name,
       description: req.description,
-      price: req.price,
-      quantityStock: req.quantityStock,
-      image: req.file?.buffer ?? null,
+      price: Number(req.price),
+      quantityStock: Number(req.quantityStock),
+      image: req.file?.buffer
+        ? { buffer: req.file.buffer, mimetype: req.file.mimetype }
+        : undefined,
     })
-
     return created(product)
   }
 
@@ -61,7 +65,8 @@ export class RegisterProductController extends Controller {
             .oneOf(imageMimeTypes, 'Invalid image mimetype')
             .required(),
         })
-        .optional(),
+        .default(null)
+        .nullable(),
     })
   }
 }

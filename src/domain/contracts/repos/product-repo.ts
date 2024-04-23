@@ -8,7 +8,10 @@ export namespace CreateProductRepository {
   export type Input = {
     name: string
     description: string
-    image: Buffer | null
+    image?: {
+      buffer: Buffer
+      mimetype: string
+    }
     price: number
     quantityStock: number
   }
@@ -16,7 +19,10 @@ export namespace CreateProductRepository {
     id: number
     name: string
     description: string
-    image: Buffer | null
+    image?: {
+      buffer: Buffer
+      mimetype: string
+    }
     price: number
     quantityStock: number
   }

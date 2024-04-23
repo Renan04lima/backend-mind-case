@@ -3,7 +3,10 @@ import { CreateProductRepository } from '@/domain/contracts/repos/product-repo'
 type Input = {
   name: string
   description: string
-  image: Buffer | null
+  image?: {
+    buffer: Buffer
+    mimetype: string
+  }
   price: number
   quantityStock: number
 }
@@ -12,7 +15,10 @@ type Output = {
   id: number
   name: string
   description: string
-  image: Buffer | null
+  image?: {
+    buffer: Buffer
+    mimetype: string
+  }
   price: number
   quantityStock: number
 }

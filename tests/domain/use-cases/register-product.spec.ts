@@ -21,7 +21,10 @@ describe('RegisterProduct UseCase', () => {
       description: 'valid_description',
       price: 10,
       quantityStock: 10,
-      image: Buffer.from('any_image'),
+      image: {
+        buffer: Buffer.from('any_image'),
+        mimetype: 'image/png',
+      },
     })
   })
 
@@ -59,7 +62,10 @@ describe('RegisterProduct UseCase', () => {
       description: 'valid_description',
       price: 10,
       quantityStock: 10,
-      image: Buffer.from('any_image'),
+      image: {
+        buffer: Buffer.from('any_image'),
+        mimetype: 'image/png',
+      },
     })
   })
 })
