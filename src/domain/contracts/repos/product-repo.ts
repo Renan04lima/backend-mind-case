@@ -27,3 +27,24 @@ export namespace CreateProductRepository {
     quantityStock: number
   }
 }
+
+export interface ListProductsRepository {
+  list: (
+    input: ListProductsRepository.Input
+  ) => Promise<ListProductsRepository.Output>
+}
+
+export namespace ListProductsRepository {
+  export type Input = {}
+  export type Output = {
+    id: number
+    name: string
+    description: string
+    image?: {
+      buffer: Buffer
+      mimetype: string
+    }
+    price: number
+    quantityStock: number
+  }[]
+}
