@@ -1,11 +1,15 @@
 import {
   CreateProductRepository,
+  DeleteProductsRepository,
   ListProductsRepository,
 } from '@/domain/contracts/repos/product-repo'
 import prisma from '@/infra/mysql/prisma-client'
 
 export class MySqlProductRepository
-  implements CreateProductRepository, ListProductsRepository
+  implements
+    CreateProductRepository,
+    ListProductsRepository,
+    DeleteProductsRepository
 {
   async create(
     input: CreateProductRepository.Input
@@ -52,5 +56,13 @@ export class MySqlProductRepository
             }
           : undefined,
     }))
+  }
+
+  async delete({ id }: DeleteProductsRepository.Input): Promise<void> {
+    await prisma.products.delete({
+      where: {
+        id,
+      },
+    })
   }
 }

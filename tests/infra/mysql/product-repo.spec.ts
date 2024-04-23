@@ -1,5 +1,6 @@
 import {
   CreateProductRepository,
+  DeleteProductsRepository,
   ListProductsRepository,
 } from '@/domain/contracts/repos/product-repo'
 import { MySqlProductRepository } from '@/infra/mysql/repos/product-repo'
@@ -85,6 +86,29 @@ describe('MySqlProductRepository', () => {
 
       expect(products).toEqual(productsResolved)
       expect(products).toHaveLength(1)
+    })
+  })
+
+  describe('delete', () => {
+    let sut: DeleteProductsRepository
+
+    beforeEach(() => {
+      sut = new MySqlProductRepository()
+      prismaMock.products.delete.mockResolvedValue({
+        id: 1,
+        name: 'valid_name',
+        description: 'valid_description',
+        price: 10,
+        quantityStock: 10,
+        imageBuffer: Buffer.from('any_image'),
+        imageType: 'image/png',
+      })
+    })
+
+    it('should delete product', async () => {
+      const product = await sut.delete({ id: 1 })
+
+      expect(product).toBeUndefined()
     })
   })
 })

@@ -48,3 +48,13 @@ export namespace ListProductsRepository {
     quantityStock: number
   }[]
 }
+
+export interface DeleteProductsRepository {
+  delete: (input: DeleteProductsRepository.Input) => Promise<void>
+}
+
+export namespace DeleteProductsRepository {
+  export type Input = {
+    id: number
+  }
+}
