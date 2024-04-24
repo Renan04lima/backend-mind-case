@@ -9,6 +9,8 @@ import { JwtAdapter } from '@/infra/gateways/jwt-adapter'
 import { LoginController } from '@/application/controllers/login'
 import { setupAuthentication } from '@/domain/use-cases/authentication'
 import { MySqlUserRepository } from '@/infra/mysql/repos/user-repo'
+import { RegisterUserController } from '@/application/controllers/register-user'
+import { setupRegisterUser } from '@/domain/use-cases/register-user'
 
 const makeMySqlProductRepository = () => {
   return new MySqlProductRepository()
@@ -41,6 +43,16 @@ export const makeUpdateProductController = () => {
 export const makeLoginController = () => {
   return new LoginController(
     setupAuthentication(
+      new MySqlUserRepository(),
+      new BcryptAdapter(12),
+      new JwtAdapter(process.env.JWT_SECRET || 'JWT_SECRET')
+    )
+  )
+}
+
+export const makeRegisterUserController = () => {
+  return new RegisterUserController(
+    setupRegisterUser(
       new MySqlUserRepository(),
       new BcryptAdapter(12),
       new JwtAdapter(process.env.JWT_SECRET || 'JWT_SECRET')
