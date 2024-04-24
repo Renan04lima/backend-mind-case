@@ -4,6 +4,11 @@ import { DeleteProductController } from '@/application/controllers/delete-produc
 import { setupRegisterProduct } from '@/domain/use-cases/register-product'
 import { MySqlProductRepository } from '@/infra/mysql/repos/product-repo'
 import { UpdateProductController } from '@/application/controllers/update-product'
+import { BcryptAdapter } from '@/infra/gateways/bcrypt-adapter'
+import { JwtAdapter } from '@/infra/gateways/jwt-adapter'
+import { LoginController } from '@/application/controllers/login'
+import { setupAuthentication } from '@/domain/use-cases/authentication'
+import { MySqlUserRepository } from '@/infra/mysql/repos/user-repo'
 
 const makeMySqlProductRepository = () => {
   return new MySqlProductRepository()
@@ -31,4 +36,14 @@ export const makeUpdateProductController = () => {
   const productRepo = makeMySqlProductRepository()
 
   return new UpdateProductController(productRepo.update.bind(productRepo))
+}
+
+export const makeLoginController = () => {
+  return new LoginController(
+    setupAuthentication(
+      new MySqlUserRepository(),
+      new BcryptAdapter(12),
+      new JwtAdapter(process.env.JWT_SECRET || 'JWT_SECRET')
+    )
+  )
 }
